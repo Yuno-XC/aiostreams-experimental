@@ -1044,6 +1044,8 @@ export const UserDataSchema = z.object({
   usePosterRedirectApi: z.boolean().optional(),
   usePosterServiceForMeta: z.boolean().optional(),
   formatter: Formatter,
+  /** Badge-pack JSON URLs imported on the configure page (not used by Stremio). */
+  badgePackUrls: z.array(z.string().url()).optional(),
   proxy: StreamProxyConfig.optional(),
   resultLimits: ResultLimitOptions.optional(),
   size: SizeFilterOptions.optional(),
