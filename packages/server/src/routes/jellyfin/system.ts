@@ -87,6 +87,16 @@ export async function publicInfo(req: Request) {
         channel: appConfig.bootstrap.channel,
         commit: appConfig.bootstrap.gitCommit,
       },
+      // User config packs first, then instance defaults.
+      defaultBadgePacks: [
+        ...((config?.badgePackUrls as string[] | undefined) ?? []),
+        ...(appConfig.jellyfin.defaultBadgePackUrls ?? []),
+      ].filter(
+        (url, index, all) =>
+          typeof url === 'string' &&
+          /^https?:\/\//i.test(url) &&
+          all.indexOf(url) === index
+      ),
     },
     Version: appConfig.jellyfin.version,
     ProductName: JELLYFIN_PRODUCT_NAME,
