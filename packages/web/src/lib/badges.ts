@@ -103,6 +103,8 @@ function fusionBadge(value: unknown): Badge | null {
     color: fusionColor(value.textColor),
     background: filled ? fusionColor(value.tagColor) : undefined,
     border: fusionColor(value.borderColor),
+    // Fusion packs use groupId so only one badge per group shows (quality, resolution, …).
+    group: text(value.groupId) ?? text(value.group),
   });
 }
 
