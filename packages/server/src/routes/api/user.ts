@@ -106,6 +106,60 @@ router.head('/', async (req, res, next) => {
   }
 });
 
+/**
+ * Experimental fork: badge pack URLs saved on the configure page.
+ * Auth: same Basic uuid:password as GET /api/v1/user.
+ */
+router.get('/badge-packs', async (req, res, next) => {
+  let creds;
+  try {
+    creds = await resolveConfigCredentials(req, res, { allowEncrypted: false });
+  } catch (error) {
+    next(error);
+    return;
+  }
+  if (!creds) {
+    next(
+      new APIError(
+        constants.ErrorCode.MISSING_REQUIRED_FIELDS,
+        undefined,
+        'Authorization header (Basic) is required'
+      )
+    );
+    return;
+  }
+  try {
+    const userData = await UserRepository.getUser(creds.uuid, creds.password);
+    const fromUser = (userData?.badgePackUrls as string[] | undefined) ?? [];
+    const fromInstance = appConfig.jellyfin.defaultBadgePackUrls ?? [];
+    const urls = [...fromUser, ...fromInstance].filter(
+      (url, index, all) =>
+        typeof url === 'string' &&
+        /^https?:\/\//i.test(url) &&
+        all.indexOf(url) === index
+    );
+    res.status(200).json(
+      createResponse({
+        success: true,
+        detail: 'Badge pack URLs retrieved successfully',
+        data: { urls },
+      })
+    );
+  } catch (error: any) {
+    if (error instanceof APIError) {
+      next(error);
+    } else {
+      next(
+        new APIError(
+          constants.ErrorCode.INTERNAL_SERVER_ERROR,
+          undefined,
+          error.message
+        )
+      );
+    }
+  }
+});
+
 // getting user details
 router.get('/', async (req, res, next) => {
   let creds;

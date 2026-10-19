@@ -208,6 +208,15 @@ export const FIELD_META: Omit<Record<keyof UserData, FieldMeta>, IgnoredKeys> = 
   resultLimits: { label: 'Result Limits', group: 'sorting', type: 'scalar', menu: 'filters', subTab: 'limit' },
 
   formatter: { label: 'Formatter', group: 'formatter', type: 'scalar', menu: 'formatter' },
+  badgePackUrls: {
+    label: 'Badge Pack URLs',
+    group: 'misc',
+    type: 'list',
+    menu: 'miscellaneous',
+    subTab: 'badges',
+    sectionId: 'badgePackUrls',
+    keywords: ['badge', 'logo', 'pack', 'nuvio', 'fusion'],
+  },
 
   proxy: { label: 'Proxy', group: 'proxy', type: 'scalar', menu: 'proxy' },
 

@@ -8,9 +8,11 @@ import { FiSettings, FiLink, FiLayers, FiActivity } from 'react-icons/fi';
 import { BackgroundOptimization } from './_components/background-optimization';
 import { PlaybackBehavior } from './_components/playback-behavior';
 import { DisplayDebug } from './_components/display-debug';
+import { BadgePacks } from './_components/badge-packs';
 import { ParentConfig } from './_components/parent-config';
 import { Variants } from './_components/variants';
 import { HealthChecks } from './_components/health-checks';
+import { MdLocalOffer } from 'react-icons/md';
 
 export function MiscellaneousMenu() {
   return (
@@ -84,6 +86,12 @@ function Content() {
                   </p>
                 </div>
               ),
+          },
+          {
+            value: 'badges',
+            label: 'Badge Packs',
+            icon: <MdLocalOffer className="w-4 h-4" />,
+            content: <BadgePacks />,
           },
           {
             value: 'parent',
