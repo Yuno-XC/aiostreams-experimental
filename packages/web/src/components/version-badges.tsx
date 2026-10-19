@@ -10,6 +10,7 @@ import {
   type CompiledBadge,
 } from '../lib/badges';
 import { settings, useSetting } from '../lib/settings';
+import { useServerInfo } from '../lib/server-info';
 
 const HOUR_MS = 60 * 60_000;
 
@@ -39,11 +40,20 @@ export const badgePackQuery = (url: string) => ({
 const packData = (results: UseQueryResult<Badge[]>[]) =>
   results.map((result) => result.data);
 
-/** Your own badges, then each linked pack's, ready to match. */
+/**
+ * Your own badges, then each linked pack's, ready to match.
+ * Experimental fork: when the account has no pack links, use the server's
+ * `defaultBadgePacks` from public system info.
+ */
 export function useBadges(): CompiledBadge[] {
   const [{ links, badges }] = useSetting(settings.playback.badges);
+  const { defaultBadgePacks } = useServerInfo();
+  const effectiveLinks = React.useMemo(() => {
+    if (links.length) return links;
+    return defaultBadgePacks;
+  }, [links, defaultBadgePacks]);
   const packs = useQueries({
-    queries: links.map(badgePackQuery),
+    queries: effectiveLinks.map(badgePackQuery),
     combine: packData,
   });
   return React.useMemo(

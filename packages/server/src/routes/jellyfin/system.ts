@@ -87,6 +87,8 @@ export async function publicInfo(req: Request) {
         channel: appConfig.bootstrap.channel,
         commit: appConfig.bootstrap.gitCommit,
       },
+      // Experimental fork: instance-default badge packs for the web app.
+      defaultBadgePacks: appConfig.jellyfin.defaultBadgePackUrls ?? [],
     },
     Version: appConfig.jellyfin.version,
     ProductName: JELLYFIN_PRODUCT_NAME,

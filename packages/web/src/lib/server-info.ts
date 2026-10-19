@@ -35,6 +35,8 @@ export interface ServerInfo extends Branding {
   parties: { relay: PartyRelayMode; defaultRelay: string | null } | null;
   /** Whether the server keeps reports from the apps, and can pass them on to the developer. */
   reports: { forward: boolean } | null;
+  /** Experimental fork: pack URLs to use when the account has none of its own. */
+  defaultBadgePacks: string[];
 }
 
 export const NO_SERVER_INFO: ServerInfo = {
@@ -48,6 +50,7 @@ export const NO_SERVER_INFO: ServerInfo = {
   css: null,
   parties: null,
   reports: null,
+  defaultBadgePacks: [],
 };
 
 interface PublicSystemInfo {
@@ -62,6 +65,7 @@ interface PublicSystemInfo {
     parties?: ServerInfo['parties'];
     reports?: ServerInfo['reports'];
     version?: { tag?: string; channel?: string; commit?: string };
+    defaultBadgePacks?: string[];
   };
 }
 
@@ -108,6 +112,11 @@ export function useServerInfoQuery(client: JellyfinClient) {
         css: data.aiostreams?.css || null,
         parties: data.aiostreams?.parties ?? null,
         reports: data.aiostreams?.reports ?? null,
+        defaultBadgePacks: Array.isArray(data.aiostreams?.defaultBadgePacks)
+          ? data.aiostreams.defaultBadgePacks.filter(
+              (u): u is string => typeof u === 'string' && /^https?:\/\//i.test(u)
+            )
+          : [],
       };
     },
     staleTime: 5 * 60_000,

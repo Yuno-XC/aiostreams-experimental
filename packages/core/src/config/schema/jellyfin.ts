@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import * as constants from '../../utils/constants.js';
-import { seconds, byteSize, optionalUrlString } from './helpers.js';
+import {
+  seconds,
+  byteSize,
+  optionalUrlString,
+  urlOrUrlList,
+} from './helpers.js';
 import type { RuntimeConfigSection } from '../types.js';
 
 /**
@@ -286,5 +291,20 @@ export const jellyfinSchema = {
     requiresRestart: false,
     secret: false,
     ui: { min: 0 },
+  },
+  /**
+   * Experimental (fork): instance-wide badge pack URLs the web app loads when a
+   * user has not set their own packs under Settings → Playback → Versions.
+   */
+  defaultBadgePackUrls: {
+    schema: urlOrUrlList,
+    default: [] as string[],
+    label: 'Default badge pack URLs',
+    description:
+      '**(Experimental fork)** Badge pack JSON URLs advertised to the AIOStreams web app. When a user has no pack links of their own, the app loads these automatically. Does not affect Stremio. Accepts one URL, a JSON array, or a list in the dashboard.',
+    env: 'JELLYFIN_DEFAULT_BADGE_PACK_URLS',
+    requiresRestart: false,
+    secret: false,
+    ui: { kind: 'list' },
   },
 } as const satisfies RuntimeConfigSection;
